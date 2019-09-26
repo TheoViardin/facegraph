@@ -1,6 +1,9 @@
 const express = require('express')
 const faunadb = require('faunadb')
 const bodyParser = require('body-parser')
+const path = require('path')
+const https = require('https')
+const fs = require('fs')
 
 const app = express()
 const q = faunadb.query
@@ -27,6 +30,10 @@ createP.then(function(response) {
     console.log(response.ref); // Would log the ref to console.
 });*/
 
+app.get('/', function(req, res) {
+    res.sendFile(path.join(__dirname + '/index.html'));
+});
+
 app.post('/user', function (req, res) {
     var today = new Date();
     var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
@@ -51,7 +58,9 @@ app.post('/user', function (req, res) {
     });
 })
 
-app.listen(3000, function () {
-  console.log('Example app listening on port 3000!')
-})
+https.createServer({
+    key: fs.readFileSync('key.pem'),
+    passphrase: 'theoviardin',
+    cert: fs.readFileSync('cert.pem')
+}, app).listen(443)
 
