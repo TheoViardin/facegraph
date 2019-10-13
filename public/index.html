@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script
+    src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+    crossorigin="anonymous"></script>
+<title>Yes</title>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="./index.css">
+</head>
+<body>
+  <form action="http://localhost:3000/" method="POST">
+    <input type="text" name="screen_name" id="screen_name" placeholder="Ajouter un compte">
+    <input type="submit" style="position: absolute; left: -9999px"/>
+  </form>
+  <div id="container"></div>
+  <script src="./sigma.js/build/sigma.min.js"></script>
+  <script src="./sigma.js/plugins/sigma.layout.forceAtlas2/supervisor.js"></script>
+  <script src="./sigma.js/plugins/sigma.layout.forceAtlas2/worker.js"></script>
+  <script src="./index.js"></script>
+</body>
+</html>

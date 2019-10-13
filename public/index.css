@@ -1,0 +1,19 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+#container {
+    position: absolute;
+    background-color: aliceblue;
+    height: 93%;
+    top: 7%;
+    width: 100%;
+}
+
+#screen_name {
+    width: calc(100% - 60px);
+    border: none;
+    font-size: 40px;
+    margin: 10px 30px;
+}
