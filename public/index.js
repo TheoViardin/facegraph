@@ -57,7 +57,7 @@ $(document).ready(function () {
             
             $('#container').empty()
 
-            s = new sigma('container');
+            s = new sigma({container: 'container', settings: {minEdgeSize: 30}});
 
             var nodes = getNodes(response.users);
             var edges = getEdges(response.edges)
@@ -78,7 +78,7 @@ $(document).ready(function () {
                 linLogMode: true
             })
 
-            window.setTimeout(function() {s.killForceAtlas2()}, 20000);
+            window.setTimeout(function() {s.killForceAtlas2()}, 50000);
 
 
             s.bind('clickNode', function (e) {            
