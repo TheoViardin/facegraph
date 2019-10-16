@@ -1,3 +1,52 @@
+function getNodes(users) {
+    let alreadySet = []
+    let nodes = []
+
+    users.forEach(function(userDetail) {
+
+        if (!alreadySet.includes(userDetail.id)) {
+            alreadySet.push(userDetail.id)
+
+            nodes.push({
+                id: userDetail.id,
+                label: userDetail.name,
+                x: Math.random(),
+                y: Math.random(),
+                size: 1,
+                color: '#'+(Math.random()*0xFFFFFF<<0).toString(16)
+            })
+        }
+    })
+
+    return nodes;
+}
+
+function getEdges(relations) {
+    let alreadySet = []
+    let edges = []
+
+    let centerNodes = []
+    relations.forEach(function(edgesDetail) {
+        
+        if (!alreadySet.includes(edgesDetail.id2 + '_' + edgesDetail.id1)) {
+            alreadySet.push(edgesDetail.id2 + '_' + edgesDetail.id1)
+
+            edges.push({
+                id: edgesDetail.id2 + '_' + edgesDetail.id1,
+                // Reference extremities:
+                source: edgesDetail.id2,
+                target: edgesDetail.id1,
+                color: '#'+(Math.random()*0xFFFFFF<<0).toString(16),
+                type: 'arrow'
+            });
+
+            centerNodes.push(edgesDetail.id1)
+        }
+    })
+
+    return {edges: edges, centerNodes: centerNodes};
+}
+
 $(document).ready(function () {
 
     var s = new sigma('container');
@@ -10,39 +59,18 @@ $(document).ready(function () {
 
             s = new sigma('container');
 
-            var users = []
-            var user_user = []
+            var nodes = getNodes(response.users);
+            var edges = getEdges(response.edges)
+            
 
-            response.user.forEach(function (userArray) { 
-                userArray.forEach(function(userDetail) {  
-                    console.log(userDetail.data.id)
-                    if (!users.includes(userDetail.data.id)) {
-                        users.push(userDetail.data.id)
-                        s.graph.addNode({
-                            id: userDetail.data.id,
-                            label: userDetail.data.name,
-                            x: Math.random(),
-                            y: Math.random(),
-                            size: 1
-                        })
-                    }
-                })
+            s.graph.read({
+                nodes: nodes,
+                edges: edges.edges
             })
 
-            response.user_user.forEach(function (user_userArray) {
-                user_userArray.forEach(function(user_userDetail) {
-                    console.log(user_userDetail)
-                    if (!user_user.includes(user_userDetail.data.user1 + '_' + user_userDetail.data.user2)) {
-                        user_user.push(user_userDetail.data.user1 + '_' + user_userDetail.data.user2)
-                        s.graph.addEdge({
-                            id: user_userDetail.data.user1 + '_' + user_userDetail.data.user2,
-                            // Reference extremities:
-                            source: user_userDetail.data.user1,
-                            target: user_userDetail.data.user2,
-                            color: '#'+(Math.random()*0xFFFFFF<<0).toString(16)
-                        });
-                    }
-                })
+            
+            edges.centerNodes.map(function (idNode) {
+                s.graph.nodes(idNode).size = 3
             })
             
             s.refresh()
@@ -50,7 +78,7 @@ $(document).ready(function () {
                 linLogMode: true
             })
 
-            window.setTimeout(function() {s.killForceAtlas2()}, 2000);
+            window.setTimeout(function() {s.killForceAtlas2()}, 20000);
 
 
             s.bind('clickNode', function (e) {            
@@ -63,7 +91,7 @@ $(document).ready(function () {
 
     $('form').on('submit', function (e) {
         e.preventDefault();
-        $.post('./user', {'screen_name': $('#screen_name').val()}, function (response) {
+        $.post('./users', {'screen_name': $('#screen_name').val()}, function (response) {
             render()
         })
         
