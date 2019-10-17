@@ -57,7 +57,7 @@ $(document).ready(function () {
             
             $('#container').empty()
 
-            s = new sigma({container: 'container', settings: {minEdgeSize: 30}});
+            s = new sigma({container: 'container', type: 'webgl', settings: {minEdgeSize: 30}});
 
             var nodes = getNodes(response.users);
             var edges = getEdges(response.edges)
@@ -75,10 +75,17 @@ $(document).ready(function () {
             
             s.refresh()
             s.startForceAtlas2({
-                linLogMode: true
+                barnesHutOptimize: true,
+                slowDown: 10,
+                worker: true,
+                 gravity: 1,
+                 outboundAttractionDistribution: true,
+                 scalingRatio: 2
             })
 
-            window.setTimeout(function() {s.killForceAtlas2()}, 50000);
+            // TODO: ajouter un endpoint pour renvoyer les utilisateurs un par un et leur relation avec d'autres utilisateur qui on un id plus petit
+
+            window.setTimeout(function() {s.killForceAtlas2()}, 200000);
 
 
             s.bind('clickNode', function (e) {            
